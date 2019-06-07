@@ -1,16 +1,22 @@
 package com.pactero.weatherreport.service.impl;
 
+/**
+ * Service to calculate the weather info
+ */
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.pactero.weatherreport.controller.WeatherReportController;
 import com.pactero.weatherreport.model.City;
 import com.pactero.weatherreport.service.WeatherReportService;
 
+@Service
 public class WeatherReportServiceImpl implements WeatherReportService {
 	
 	Logger logger = Logger.getLogger(WeatherReportController.class);
@@ -18,6 +24,14 @@ public class WeatherReportServiceImpl implements WeatherReportService {
 	@Value("${uriWithApiKey}")
 	private String uriWithApiKey;
 	
+	@Autowired
+	private RestTemplate restTemplate;
+	
+	/*
+	 * @param <code> City</code>
+	 * invoke the rest call to OpenWeatherApi to fetch the weather report for given city
+	 * maps the response back to the model Obj and return back the response
+	 */
 	public City getWeatherReportForGivenCity(City city) {
 		
 		try {
@@ -53,13 +67,20 @@ public class WeatherReportServiceImpl implements WeatherReportService {
 		return city;
 	}
 	
+	/*
+	 * Makes a Rest call to the given webservice URL
+	 * @return String response
+	 */
 	private String invokeWeatherApi(String cityName) {
 			logger.info("Invoking Weather API URL");
-		RestTemplate restTemplate = new RestTemplate();
 		String url = uriWithApiKey+cityName;
 		return restTemplate.getForObject(url, String.class);
 	}
 
+	/*
+	 * convert the speed in miles to Km/h
+	 * The respons returned by the api is in miles, so this api converts to km/h
+	 */
 	private double milesTokm(double distanceInMiles) {
         return distanceInMiles * 1.60934;
     }
