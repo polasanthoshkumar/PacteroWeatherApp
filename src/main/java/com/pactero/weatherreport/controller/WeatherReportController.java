@@ -1,5 +1,7 @@
 package com.pactero.weatherreport.controller;
-
+/*
+ * class acts as a front end controller to serve request to the application
+ */
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,7 @@ import com.pactero.weatherreport.model.City;
 import com.pactero.weatherreport.service.WeatherReportService;
 
 @Controller
-@RequestMapping("/city")
+@RequestMapping("/")
 public class WeatherReportController {
 	
 	Logger logger = Logger.getLogger(WeatherReportController.class);
@@ -39,7 +41,10 @@ public class WeatherReportController {
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(validator);
     }
-	
+	/*
+	 * starting point of the application to get request
+	 * @return cities list to render in front end
+	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String initForm(Model model) {
 		logger.info("Started to execute initForm ");
@@ -49,6 +54,13 @@ public class WeatherReportController {
 		return "city";
 	}
 	
+	/**
+	 * post request which serves the request to get the weather details info for the given country
+	 * @param model
+	 * @param city
+	 * @param result
+	 * @return
+	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public String submitForm(Model model, @Validated City city, BindingResult result) {
 		logger.info("Started to execute submitForm ");
